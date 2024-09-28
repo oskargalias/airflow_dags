@@ -6,8 +6,8 @@ from airflow.models import Variable
 
 main_config = dict(
     repo_full_name = 'oskargalias/standard_server_jupyter',
-    py_file_to_run = 'VK2/scripts/test.py',
-    req_path = "VK2/req", 
+    py_file_to_run = 'VK2/scripts/daily.py',
+    req_path = "VK2/req",
 )
         
 def gitrun(
@@ -60,8 +60,8 @@ def gitrun(
     
     
 dag = DAG(
-    'gitrun_dag', 
-    schedule="@once",
+    'vk_daily', 
+    schedule="27 10 * * *",
     start_date=datetime.datetime(2024, 9, 17, 0),
     tags=["gitrun"]
     )
