@@ -1,0 +1,23 @@
+from git_project_runner import build_git_project_dag
+
+
+# Copy this file to <your_dag_id>.py and edit only main_config.
+main_config = {
+    "repo_full_name": "oskargalias/my-project",
+    "ref": "main",  # branch, tag or commit SHA
+    "entrypoint": "scripts/main.py",
+    "requirements": "requirements.txt",  # null is allowed
+    "arguments": ["--mode", "daily"],
+    "working_directory": ".",
+    "schedule": "0 9 * * *",  # null means manual-only
+    "start_date": "2026-01-01T00:00:00+03:00",
+    "timeout_minutes": 60,
+    "retries": 1,
+    "environment": {"APP_MODE": "production"},
+    # Values stay in Airflow Variables and are exposed only to the project process.
+    "secret_variables": {"OPENAI_API_KEY": "openai_api_key"},
+    "tags": ["github-project"],
+}
+
+
+dag = build_git_project_dag("my_project", main_config)
