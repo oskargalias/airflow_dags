@@ -9,7 +9,7 @@ main_config = {
     "entrypoint": "src/main.py",
     "requirements": "requirements.txt",
     "schedule": "0 20 * * *",
-    "start_date": "2026-07-14T20:00:00+03:00",
+    "start_date": "2026-01-01T00:00:00+03:00",
     "timeout_minutes": 30,
     "retries": 2,
     "environment": {
