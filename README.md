@@ -50,6 +50,10 @@ Every project also receives four safe run-context values when available:
 `AUTOMATION_LOGICAL_DATE`, and `AUTOMATION_RUN_ID`. Airflow connections,
 database URLs, and the rest of the task context are deliberately not inherited.
 
+The residents-chat brief in `telegram_weekly_resident_brief.py` runs every
+Sunday at 20:00 Europe/Moscow and requests a rolling seven-day window for
+manual tests.
+
 Private repositories use the Airflow Variable `github_token`. The token is
 passed to Git through a temporary `GIT_ASKPASS` helper, never embedded in a URL
 or command argument, and is not passed to the project process. Project and pip
