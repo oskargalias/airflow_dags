@@ -153,10 +153,29 @@ def _project_environment(temporary_path: Path) -> dict[str, str]:
     return environment
 
 
+def _automation_context_environment(context: Mapping[str, Any]) -> dict[str, str]:
+    """Expose a small, non-secret subset of the Airflow run context."""
+
+    mapping = {
+        "data_interval_start": "AUTOMATION_DATA_INTERVAL_START",
+        "data_interval_end": "AUTOMATION_DATA_INTERVAL_END",
+        "logical_date": "AUTOMATION_LOGICAL_DATE",
+        "run_id": "AUTOMATION_RUN_ID",
+    }
+    environment: dict[str, str] = {}
+    for context_name, environment_name in mapping.items():
+        value = context.get(context_name)
+        if value is None:
+            continue
+        environment[environment_name] = value.isoformat() if hasattr(value, "isoformat") else str(value)
+    return environment
+
+
 def run_git_project(main_config: Mapping[str, Any]) -> None:
     """Clone, isolate dependencies and execute one configured project."""
 
     from airflow.models import Variable
+    from airflow.operators.python import get_current_context
 
     config = validate_main_config(main_config)
     token = Variable.get(config["github_token_variable"], default_var=None)
@@ -205,6 +224,7 @@ def run_git_project(main_config: Mapping[str, Any]) -> None:
             )
 
         project_env.update(config["environment"])
+        project_env.update(_automation_context_environment(get_current_context()))
         for environment_name, airflow_variable in config["secret_variables"].items():
             project_env[environment_name] = Variable.get(airflow_variable)
         _run(
